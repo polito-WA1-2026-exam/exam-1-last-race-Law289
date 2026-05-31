@@ -25,8 +25,8 @@ db.run(`
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )
 `, (err) => {
-  if (err) console.error('Errore crea users:', err);
-  else console.log('Tabella users creata');
+  if (err) console.error('Error creating users table:', err);
+  else console.log('Users table created');
 });
 
 db.run(`
@@ -38,18 +38,18 @@ db.run(`
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )
 `, (err) => {
-  if (err) console.error('Errore crea app_structure:', err);
-  else console.log('Tabella app_structure creata');
+  if (err) console.error('Error creating app_structure table:', err);
+  else console.log('app_structure table created');
 });
 
 db.run(`INSERT OR IGNORE INTO users (username, password_hash, email) VALUES 
   ('admin', '$2b$10$examplehash', 'admin@test.com')`, 
   (err) => {
-    if (err) console.error('Errore insert user:', err);
-    else console.log('Utente admin inserito');
+    if (err) console.error('Error inserting admin user:', err);
+    else console.log('Admin user inserted');
   });
 
 db.close((err) => {
-  if (err) console.error('Errore chiusura:', err);
-  else console.log('Database inizializzato correttamente');
+  if (err) console.error('Error closing database:', err);
+  else console.log('Database initialized successfully');
 });
