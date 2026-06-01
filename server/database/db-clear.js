@@ -16,45 +16,22 @@ const db = new sqlite.Database(
     }
 });
 
+const tables = ['stations', 'lines', 'line_stations', 'connections', 'games', 'users'];
+
 function resetDatabase() {
   return new Promise((resolve, reject) => {
     db.serialize(() => {
       db.run('PRAGMA foreign_keys = OFF');
 
-      db.run('DELETE FROM users', (err) => {
-        if (err) return reject(err);
-        console.log('Users table cleared');
-      });
-
-      db.run('DELETE FROM app_structure', (err) => {
-        if (err) return reject(err);
-        console.log('app_structure table cleared');
-      });
-
-      db.run('DELETE FROM sqlite_sequence WHERE name="users"', (err) => {
-        if (err) return reject(err);
-        console.log('User IDs reset');
-      });
-
-      db.run('DELETE FROM sqlite_sequence WHERE name="app_structure"', (err) => {
-        if (err) return reject(err);
-        console.log('ID app_structure reset');
-      });
-
-      db.run('DROP TABLE IF EXISTS users', (err) => {
-        if (err) return reject(err);
-        console.log('Users table deleted');
-      });
-
-      db.run('DROP TABLE IF EXISTS app_structure', (err) => {
-        if (err) return reject(err);
-        console.log('App-structure table deleted');
-      });
-      
-      db.run('DROP TABLE IF EXISTS sqlite_sequence', (err) => {
-        if (err) return reject(err);
-        console.log('Sqlite table deleted');
-      });
+      tables.forEach(table => {
+        db.run(`DROP TABLE IF EXISTS ${table}`, err => {
+          if (err) {
+            console.error(err);
+            return reject(err);
+          }
+          console.log(`Table ${table} deleted`);
+        })
+      })
 
       db.run('PRAGMA foreign_keys = ON');
 

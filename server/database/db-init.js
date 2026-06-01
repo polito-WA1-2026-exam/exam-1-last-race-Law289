@@ -5,6 +5,72 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const createStaionsTable_SQL = `CREATE TABLE IF NOT EXISTS stations (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT UNIQUE NOT NULL
+)`
+
+const createLinesTable_SQL = `CREATE TABLE IF NOT EXISTS lines (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT UNIQUE NOT NULL
+)`
+
+const createLineStationsTable_SQL = `CREATE TABLE IF NOT EXISTS line_stations (
+  lineID INTEGER NOT NULL, 
+  stationID INTEGER NOT NULL,
+  stopOrder INTEGER NOT NULL,
+  PRIMARY KEY (lineID, stopOrder)
+  UNIQUE (lineID, stationID)
+  FOREIGN KEY (lineID) REFERENCES lines(id)
+  FOREIGN KEY (stationID) REFERENCES stations(id)
+)`  
+
+const createConnectionsTable_SQL = `CREATE TABLE IF NOT EXISTS connections (
+  stationA_ID INTEGER NOT NULL,
+  stationB_ID INTEGER NOT NULL,
+  lineID INTEGER NOT NULL,
+  PRIMARY KEY (stationA_ID, stationB_ID),
+  FOREIGN KEY (stationA_ID) REFERENCES stations(id),
+  FOREIGN KEY (stationB_ID) REFERENCES stations(id),
+  FOREIGN KEY (lineID) REFERENCES lines(id)
+)`
+
+const createEventsTable_SQL = `CREATE TABLE IF NOT EXISTS events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT UNIQUE NOT NULL,
+  description TEXT NOT NULL,
+  coinsDelta INTEGER NOT NULL
+)`
+
+const createUsersTable_SQL = `CREATE TABLE IF NOT EXISTS users (
+  email TEXT PRIMARY KEY,
+  username TEXT UNIQUE NOT NULL,
+  passwordHash INTEGER NOT NULL,
+  createdAt TEXT NOT NULL DEFAULT(datetime('now'))
+)`
+
+const createGamesTable_SQL = `CREATE TABLE IF NOT EXISTS games (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  userID INTEGER NOT NULL,
+  startStationID INTEGER NOT NULL,
+  endStationID INTEGER NOT NULL,
+  isValid BOOL NOT NULL DEFAULT true,
+  route_JSON TEXT NOT NULL,
+  score INTEGER NOT NULL DEFAULT 0,
+  startTime TEXT NOT NULL DEFAULT(datetime('now')),
+  endTime TEXT NOT NULL
+)`
+
+const tables = ['stations', 'lines', 'lineStations', 'connections', 'games', 'users'];
+const querys = [
+  createStaionsTable_SQL, 
+  createLinesTable_SQL, 
+  createLineStationsTable_SQL, 
+  createConnectionsTable_SQL, 
+  createGamesTable_SQL, 
+  createUsersTable_SQL
+];
+
 const db = new sqlite.Database(
     path.join(__dirname, "database.db"), 
     err => {
@@ -16,38 +82,16 @@ const db = new sqlite.Database(
     }
 });
 
-db.run(`
-  CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT UNIQUE NOT NULL,
-    password_hash TEXT NOT NULL,
-    email TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-  )
-`, (err) => {
-  if (err) console.error('Error creating users table:', err);
-  else console.log('Users table created');
-});
-
-db.run(`
-  CREATE TABLE IF NOT EXISTS app_structure (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER REFERENCES users(id),
-    component_name TEXT NOT NULL,
-    component_data TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-  )
-`, (err) => {
-  if (err) console.error('Error creating app_structure table:', err);
-  else console.log('app_structure table created');
-});
-
-db.run(`INSERT OR IGNORE INTO users (username, password_hash, email) VALUES 
-  ('admin', '$2b$10$examplehash', 'admin@test.com')`, 
-  (err) => {
-    if (err) console.error('Error inserting admin user:', err);
-    else console.log('Admin user inserted');
+let i = 0;
+tables.forEach((table) => {
+  db.run(querys[i], (err) => {
+    if (err)
+      console.error(err);
+    else
+      console.log(`${table} table created successfully`);
   });
+  i++;
+});
 
 db.close((err) => {
   if (err) console.error('Error closing database:', err);
