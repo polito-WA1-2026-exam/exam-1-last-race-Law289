@@ -41,7 +41,7 @@ function getStation(stationID) {
                 console.error(err);
                 return reject(err);
             }
-            resolve(row);
+            resolve(new Station({id: row.id, name: row.name}));
         })
     })
 }
@@ -54,6 +54,7 @@ function addStation(station) {
                 console.error(err);
                 return reject(err);
             }
+            station.id = this.lastID;
             resolve(this.lastID);
         })
     })
@@ -116,10 +117,10 @@ function addLine(line) {
             if (!line.stations || line.stations.length === 0)
                 resolve(this.lastID);
 
-            const lineID = this.lastID;
+            line.id = this.lastID;
             const stopPromises = line.stations.map((station, i) => {
                 return new Promise((resolveStop, rejectStop) => {
-                    db.run(stopsSQL, [lineID, station.id, i], err => {
+                    db.run(stopsSQL, [line.id, station.id, i], err => {
                         if (err) {
                             console.error(err);
                             return rejectStop(err);

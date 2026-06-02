@@ -4,6 +4,10 @@ function Station ({
 }) {
     this.id = id;
     this.name = name;
+
+    this.print = function() {
+        console.log(`(${this.id}) Station "${this.name}"`);
+    }
 }
 
 function Line ({
@@ -27,6 +31,11 @@ function Line ({
 
         this.stations.splice(position, 0, station);
         return true;
+    }
+
+    this.print() = function() {
+        console.log(`(${this.id}) ${this.color} line "${this.name}" crosses the following stations:`)
+        stations.forEach(station => stations.print())
     }
 }
 
