@@ -1,7 +1,7 @@
 import sqlite from 'sqlite3'
 import path from 'path'
 import { fileURLToPath } from 'url';
-import {Station, Line, Connection} from './Entities'
+import {Station, Line, Connection} from './Entities.js'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,6 +14,8 @@ const db = new sqlite.Database(
     else 
         console.log("Database linked");
 });
+
+//#region STATIONS
 
 function getAllStations() {
     return new Promise((resolve, reject) => {
@@ -37,29 +39,101 @@ function getStation(stationID) {
         db.get(sql, [stationID], (err, row) => {
             if (err) {
                 console.error(err);
-                reject(err);
+                return reject(err);
             }
-            else {
-                resolve(row);
-            }
+            resolve(row);
         })
     })
 }
 
+function addStation(station) {
+    return new Promise((resolve, reject) => {
+        const sql = 'INSERT OR REPLACE INTO stations(name) VALUES(?)';
+        db.run(sql, [station.name], (err) => {
+            if (err) {
+                console.error(err);
+                return reject(err);
+            }
+            resolve(this.lastID);
+        })
+    })
+}
+
+//#endregion
+//#region LINES
+
 function getAllLines() {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM lines';
-        db.all(sql, (err, rows) => {
+        db.all(sql, async (err, rows) => {
             if (err) {
                 console.log(err);
-                reject(err);
+                return reject(err);
             }
-            else {
-                const stops = await getLineStops(row => row.id);
-                const lines = rows.map(row => new Line(...row, stops));
-                resolve(lines);
-            }
+            const lines = await Promise.all(rows.map(async row => {
+                const stops = await getLineStops(row.id);
+                return new Line({
+                    id: row.id,
+                    name: row.name,
+                    color: row.color,
+                    stations: stops
+                });
+            }));
+            resolve(lines);
         })
+    })
+}
+
+function getLine(lineID) {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM lineStations WHERE lineID = ?';
+        db.get(sql, [lineID], async (err, row) => {
+            if (err) {
+                console.error(err);
+                return reject(err);
+            }
+            const stops = await getLineStops(lineID);
+            resolve(new Line({
+                id: lineID,
+                name: row.name,
+                color: row.color,
+                stations: stops
+            }));
+        })
+    })
+}
+
+function addLine(line) {
+    return new Promise((resolve, reject) => {
+        const lineSQL = 'INSERT OR REPLACE INTO lines(name, color) VALUES(?, ?)';
+        const stopsSQL = 'INSERT OR REPLACE INTO line_stations(lineID, stationID, stopOrder) VALUES(?, ?, ?)';
+        db.run(lineSQL, [line.name, line.color], (err) => {
+            if (err) {
+                console.error(err);
+                return reject(err);
+            }
+
+            if (!line.stations || line.stations.length === 0)
+                resolve(this.lastID);
+
+            const lineID = this.lastID;
+            const stopPromises = line.stations.map((station, i) => {
+                return new Promise((resolveStop, rejectStop) => {
+                    db.run(stopsSQL, [lineID, station.id, i], err => {
+                        if (err) {
+                            console.error(err);
+                            return rejectStop(err);
+                        }
+                        resolveStop();
+                    })
+                })
+            })
+            
+            Promise.all(stopPromises)
+                .then(() => resolve(this.lastID))
+                .catch(err => reject(err))
+            ;
+        });
     })
 }
 
@@ -77,4 +151,22 @@ function getLineStops(lineID) {
             }
         })
     })
+}
+
+//#endregion
+//#region USERS
+
+//#endregion
+//#region GAMES
+
+//#endregion
+
+export {
+    addStation, 
+    addLine,
+    getStation, 
+    getLine, 
+    getAllLines, 
+    getAllStations,
+    getLineStops
 }

@@ -72,7 +72,7 @@ const querys = [
 ];
 
 const db = new sqlite.Database(
-    path.join(__dirname, "database.db"), 
+    path.join(__dirname, "..", "database.db"), 
     err => {
     if (err) {
         console.error(err);

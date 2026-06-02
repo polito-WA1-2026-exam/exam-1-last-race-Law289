@@ -8,8 +8,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "db-init": "node database/db-init.js",
-    "db-reset": "node database/db-clear.js"
+    "db-init": "node db-init/db-init.js",
+    "db-reset": "node db-init/db-clear.js",
+    "db-clear": "node db-init/db-clear.js",
+    "db-fill": "node db-init/db-populate.js",
+    "db-populate": "node db-init/db-populate.js"
   },
   "dependencies": {
     "express": "^5.2.1"
