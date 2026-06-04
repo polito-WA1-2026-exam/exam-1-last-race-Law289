@@ -22,9 +22,12 @@
 
 ## Database Tables
 
-- Table `users` - contains xx yy zz
-- Table `something` - contains ww qq ss
-- ...
+- Table `stations` - contains id and name of every station
+- Table `lines` - contains id and name of every line
+- Table `line_station` - contains the list of the IDs of stations stops of each line
+- Table `connections` - contains pairs of adjacent station IDs and the line that connects them
+- Table `games` - contains data on the previous games, those are game and user id, start and end stations IDs, wether the given route was valid or not, the list of stations chosen by the user in JSON format, final score, start and end timestamps of the game.
+- Table `users` - contains information on the users registered in the app, email, username, passwordHash and registering date.
 
 ## Main React Components
 

@@ -29,7 +29,7 @@ const createConnectionsTable_SQL = `CREATE TABLE IF NOT EXISTS connections (
   stationA_ID INTEGER NOT NULL,
   stationB_ID INTEGER NOT NULL,
   lineID INTEGER NOT NULL,
-  PRIMARY KEY (stationA_ID, stationB_ID),
+  PRIMARY KEY (stationA_ID, stationB_ID, lineID),
   FOREIGN KEY (stationA_ID) REFERENCES stations(id),
   FOREIGN KEY (stationB_ID) REFERENCES stations(id),
   FOREIGN KEY (lineID) REFERENCES lines(id)

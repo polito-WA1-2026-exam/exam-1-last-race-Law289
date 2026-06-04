@@ -47,6 +47,10 @@ function Connection ({
     this.stationA = stationA;
     this.stationB = stationB;
     this.line = line;
+
+    this.print = function() {
+        console.log(`Connection between station ${this.stationA.name} and station ${this.stationB.name} on line ${this.line.name}`);
+    }
 }
 
 export {Station, Line, Connection};

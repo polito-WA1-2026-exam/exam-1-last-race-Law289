@@ -108,6 +108,7 @@ function addLine(line) {
     return new Promise((resolve, reject) => {
         const lineSQL = 'INSERT OR REPLACE INTO lines(name, color) VALUES(?, ?)';
         const stopsSQL = 'INSERT OR REPLACE INTO line_stations(lineID, stationID, stopOrder) VALUES(?, ?, ?)';
+        const connectionSQL = 'INSERT OR REPLACE INTO connections(stationA_ID, stationB_ID, lineID) VALUES(?, ?, ?)';
         db.run(lineSQL, [line.name, line.color], (err) => {
             if (err) {
                 console.error(err);
@@ -129,10 +130,23 @@ function addLine(line) {
                     })
                 })
             })
-            
+            const connectionPromises = line.stations.slice(0, line.stations.length-1).map((station, i) => {
+                return new Promise((resolveConnection, rejectConnection) => {
+                    const nextStation = line.stations[i+1];
+                    db.run(connectionSQL, [station.id, nextStation.id, line.id], err => {
+                        if (err) {
+                            console.error(err);
+                            return rejectConnection(err);
+                        }
+                        resolveConnection();
+                    })
+                })
+            })
+
             Promise.all(stopPromises)
-                .then(() => resolve(this.lastID))
-                .catch(err => reject(err))
+                .then(() => Promise.all(connectionPromises))
+                    .then(() => resolve(this.lastID))
+                    .catch(err => reject(err))
             ;
         });
     })
@@ -149,6 +163,24 @@ function getLineStops(lineID) {
             else {
                 const stops = rows.map(row => row.stationID);
                 resolve(stops);
+            }
+        })
+    })
+}
+
+//#endregion
+
+//#region CONNECTIONS
+
+function getAllConnections() {
+    const sql = 'SELECT * FROM connections';
+    return new Promise((resolve, reject) => {
+        db.all(sql, (err, rows) => {
+            if (err) {
+                console.error(err);
+                reject(err);
+            } else {
+                resolve(rows);
             }
         })
     })
