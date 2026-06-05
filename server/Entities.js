@@ -33,9 +33,9 @@ function Line ({
         return true;
     }
 
-    this.print() = function() {
+    this.print = function() {
         console.log(`(${this.id}) ${this.color} line "${this.name}" crosses the following stations:`)
-        stations.forEach(station => stations.print())
+        stations.forEach(station => station.print())
     }
 }
 

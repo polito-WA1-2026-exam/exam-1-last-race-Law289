@@ -7,4 +7,4 @@ import {Station, Line} from '../Entities.js'
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-db.addStation(new Station({id: undefined, name: "Porta Nuova"}))
+db.addStation(new Station({name: "Porta Nuova"}))

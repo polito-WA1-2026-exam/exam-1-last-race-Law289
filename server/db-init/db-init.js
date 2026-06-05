@@ -12,7 +12,8 @@ const createStaionsTable_SQL = `CREATE TABLE IF NOT EXISTS stations (
 
 const createLinesTable_SQL = `CREATE TABLE IF NOT EXISTS lines (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT UNIQUE NOT NULL
+  name TEXT UNIQUE NOT NULL,
+  color TEXT UNIQUE NOT NULL
 )`
 
 const createLineStationsTable_SQL = `CREATE TABLE IF NOT EXISTS line_stations (
