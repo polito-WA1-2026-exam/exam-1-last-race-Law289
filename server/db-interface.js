@@ -104,11 +104,14 @@ function getAllLines() {
 
 function getLine(lineID) {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM line_stations WHERE lineID = ?';
+        const sql = 'SELECT * FROM lines WHERE id = ?';
         db.get(sql, [lineID], async (err, row) => {
             if (err) {
                 console.error(err);
                 return reject(err);
+            }
+            if (!row) {
+                return reject(new Error(`Line with id ${lineID} not found`));
             }
             const stops = await getLineStops(lineID);
             resolve(new Line({
@@ -185,14 +188,20 @@ function addLine(line) {
 
 function getLineStops(lineID) {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM line_stations WHERE lineID = ? ORDER BY stopOrder'
+        const sql = `
+            SELECT stations.id, stations.name
+            FROM line_stations
+            JOIN stations ON line_stations.stationID = stations.id
+            WHERE line_stations.lineID = ?
+            ORDER BY line_stations.stopOrder
+        `;
         db.all(sql, [lineID], (err, rows) => {
             if (err) {
                 console.error(err);
                 reject(err);
             }
             else {
-                const stops = rows.map(row => row.stationID);
+                const stops = rows.map(row => new Station({id: row.id, name: row.name}));
                 resolve(stops);
             }
         })

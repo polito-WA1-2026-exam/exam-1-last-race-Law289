@@ -13,7 +13,8 @@
     "db-clear": "node db-init/db-clear.js",
     "db-fill": "node db-init/db-populate.js",
     "db-populate": "node db-init/db-populate.js",
-    "db-test": "node db-init/db-test.js"
+    "db-test": "node db-init/db-test.js",
+    "db-show": "node db-init/db-show.js"
   },
   "dependencies": {
     "express": "^5.2.1"

@@ -6,7 +6,7 @@ function Station ({
     this.name = name;
 
     this.print = function() {
-        console.log(`(${this.id}) Station "${this.name}"`);
+        console.log(`(S${this.id}) Station "${this.name}"`);
     }
 }
 
@@ -34,8 +34,8 @@ function Line ({
     }
 
     this.print = function() {
-        console.log(`(${this.id}) ${this.color} line "${this.name}" crosses the following stations:`)
-        stations.forEach(station => station.print())
+        console.log(`(L${this.id}) ${this.color} line "${this.name}" crosses the following stations:`)
+        this.stations.forEach(station => station.print())
     }
 }
 

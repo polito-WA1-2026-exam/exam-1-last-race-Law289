@@ -1,25 +1,20 @@
 import sqlite from 'sqlite3'
-import path from 'path'
-import { fileURLToPath } from 'url'
 import * as db from '../db-interface.js'
 import {Station, Line} from '../Entities.js'
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const stationTest1 = new Station({id: undefined, name: "Porta Nuova"});
 const stationTest2 = new Station({id: undefined, name: "Porta Dora"});
 const stationTest3 = new Station({id: undefined, name: "Porta Susa"});
+
+console.log();
+console.log("-------- Database test start ------");
+console.log();
 
 await db.addStation(stationTest1)
 await db.addStation(stationTest2)
 await db.addStation(stationTest3)
 
 const stations = await db.getAllStations();
-
-console.log();
-console.log("-------- Database test start ------");
-console.log();
 
 console.log("Reading from all stations:");
 stations.forEach(station => {
