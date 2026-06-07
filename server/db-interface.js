@@ -248,6 +248,65 @@ function getAllConnections() {
 //#region GAMES
 
 //#endregion
+//#region GAMEPLAY
+
+/**
+ * Finds the length (number of stations) of the shortest path between two stations using BFS
+ * @param {number} startStationID - Starting station ID
+ * @param {number} endStationID - Ending station ID
+ * @returns A promise that resolves in a number representing the path length (number of stations)
+ */
+function getConnectionPath(startStationID, endStationID) {
+    return new Promise((resolve, reject) => {
+        const sql = `SELECT stationA_ID, stationB_ID FROM connections`;
+        
+        if (startStationID === endStationID) {
+            resolve(1);
+            return;
+        }
+
+        db.all(sql, (err, rows) => {
+            if (err) {
+                console.log(err);
+                return reject(err);
+            }
+
+            const graph = {};
+            rows.forEach(row => {
+                if (!graph[row.stationA_ID]) graph[row.stationA_ID] = [];
+                if (!graph[row.stationB_ID]) graph[row.stationB_ID] = [];
+                
+                // Undirected graph
+                graph[row.stationA_ID].push(row.stationB_ID);
+                graph[row.stationB_ID].push(row.stationA_ID);
+            });
+
+            const queue = [[startStationID, 1]]; // [node, pathLength]
+            const visited = new Set([startStationID]);
+
+            while (queue.length > 0) {
+                const [currentStation, length] = queue.shift();
+
+                if (currentStation === endStationID) {
+                    resolve(length);
+                    return;
+                }
+
+                const neighbors = graph[currentStation] || [];
+                for (const neighbor of neighbors) {
+                    if (!visited.has(neighbor)) {
+                        visited.add(neighbor);
+                        queue.push([neighbor, length + 1]);
+                    }
+                }
+            }
+
+            reject(new Error(`No path found between station ${startStationID} and ${endStationID}`));
+        });
+    });
+}
+
+//#endregion
 
 export {
     addStation, 
@@ -257,5 +316,6 @@ export {
     getAllLines, 
     getAllStations,
     getLineStops,
-    getAllConnections
+    getAllConnections,
+    getConnectionPath,
 }
