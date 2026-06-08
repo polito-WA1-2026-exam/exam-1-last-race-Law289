@@ -2,15 +2,25 @@ body {
   background-color: white;
 }
 
-main {
-  background-color: green;
+header {
+  background-color: blue;
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-between;
+}
+
+main {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: green;
 }
 
 .wrapper {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  align-items: center;
+  justify-content: flex-start;
 }

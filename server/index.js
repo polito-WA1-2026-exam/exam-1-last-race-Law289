@@ -1,5 +1,6 @@
 import express from 'express';
 import morgan from 'morgan';
+import path from 'path';
 import { param, body, validationResult } from 'express-validator';
 import cors from 'cors'
 
@@ -10,6 +11,7 @@ const log = morgan('dev');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, '../client/public')))
 app.use(log);
 app.use(cors({origin: "http://localhost:5173"}));
 

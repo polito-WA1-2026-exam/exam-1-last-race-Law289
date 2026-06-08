@@ -10,7 +10,8 @@ function App() {
   return (
     <>
     <header>
-
+      <p>logo</p>
+      <p>userIcon</p>
     </header>
     
     <div className="wrapper">

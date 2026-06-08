@@ -1,8 +1,12 @@
 
+import './styles/Map.css'
+
 function Map() {
     return (
         <>
-          <image/>
+          <img className="fullMap"
+            src="/imgs/NetworkMapFull.png" 
+            alt="network map not found"/>
         </>
     )
 }
