@@ -22,7 +22,7 @@ stations.forEach(station => {
 })
 
 console.log("");
-console.log("Specific required station 1, 2, 3");
+console.log("Specifically required stations 1, 2, 3");
 
 const gotStation1 = await db.getStation(1);
 const gotStation2 = await db.getStation(2);

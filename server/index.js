@@ -3,7 +3,7 @@ import morgan from 'morgan';
 import { param, body, validationResult } from 'express-validator';
 import cors from 'cors'
 
-import { gameTargetPair } from './routes/game';
+import { gameTargetPair } from './game';
 
 const app = express();
 const log = morgan('dev');
@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(log);
 app.use(cors({origin: "http://localhost:5173"}));
 
-//#region APIs
+//#region API
 
 app.get('/game/setup', (req, res) => {
   try {

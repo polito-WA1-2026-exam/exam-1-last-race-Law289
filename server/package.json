@@ -8,13 +8,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "db-init": "node db-init/db-init.js",
-    "db-reset": "node db-init/db-clear.js",
-    "db-clear": "node db-init/db-clear.js",
-    "db-fill": "node db-init/db-populate.js",
-    "db-populate": "node db-init/db-populate.js",
-    "db-test": "node db-init/db-test.js",
-    "db-show": "node db-init/db-show.js"
+    "db-init": "node command-line/db-init.js",
+    "db-reset": "node command-line/db-clear.js",
+    "db-clear": "node command-line/db-clear.js",
+    "db-fill": "node command-line/db-populate.js",
+    "db-populate": "node command-line/db-populate.js",
+    "db-test": "node command-line/db-test.js",
+    "db-show": "node command-line/db-show.js",
+    "game-test": "node command-line/game-test.js"
   },
   "dependencies": {
     "express": "^5.2.1"

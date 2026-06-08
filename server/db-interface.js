@@ -57,22 +57,17 @@ function getStation(stationID) {
  */
 function addStation(station) {
     return new Promise((resolve, reject) => {
-        const selectSQL = 'SELECT id FROM stations WHERE name = ?'; 
-        const insertSQL = 'INSERT INTO stations(name) VALUES(?)';
+        const insertOrIgnoreSQL = 'INSERT OR IGNORE INTO stations(name) VALUES(?)';
+        const selectSQL = 'SELECT id FROM stations WHERE name = ?';
 
-        db.get(selectSQL, [station.name], (err, row) => {
+        db.run(insertOrIgnoreSQL, [station.name], function(err) {
             if (err) return reject(err);
-            
-            if (row) {
-                station.id = row.id; 
+            db.get(selectSQL, [station.name], (err, row) => {
+                if (err) return reject(err);
+                if (!row) return reject(new Error(`Failed to get station id for ${station.name}`));
+                station.id = row.id;
                 resolve(row.id);
-            } else {
-                db.run(insertSQL, [station.name], function(err) {
-                    if (err) return reject(err);
-                    station.id = this.lastID;
-                    resolve(this.lastID);
-                });
-            }
+            });
         });
     });
 }

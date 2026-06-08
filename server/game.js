@@ -1,5 +1,5 @@
 import express from 'express'
-import * as db from '../db-interface'
+import * as db from './db-interface.js'
 
 /**
  * Filters all the station pairs on the constraints, then extracts the game target pair 
@@ -21,18 +21,17 @@ async function getRandomStationsPair(minStationsBetween) {
             const stationB = allStations[j];
             
             try {
-                const path = await db.getConnectionPath(stationA.id, stationB.id);
-                const stationsBetween = path.length - 1;
+                const pathLength = await db.getConnectionPath(stationA.id, stationB.id);
+                const stationsBetween = pathLength-1;
                 
                 if (stationsBetween >= minStationsBetween) {
                     validPairs.push({
                         stationA,
-                        stationB,
-                        path
+                        stationB
                     });
                 }
             } catch (err) {
-                // No path between the two stations
+                throw new Error("Stations not connected")
             }
         }
     }
