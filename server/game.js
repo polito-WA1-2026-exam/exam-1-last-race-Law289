@@ -1,4 +1,9 @@
-import express from 'express'
+
+/*
+  Contains the game logics on the server side, such as the target pair extrapolation,
+  validation of the user path, and game recording
+*/
+
 import * as db from './db-interface.js'
 
 /**

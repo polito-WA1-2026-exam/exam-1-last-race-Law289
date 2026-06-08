@@ -1,0 +1,14 @@
+.PlayButton {
+    color: white;
+    background-color: blue;
+    height: 10%;
+    width: 20%;
+    border: 2px solid currentColor;
+    border-radius: 5px;
+}
+
+.PlayButton:hover {
+    cursor: pointer;
+    color: greenyellow;
+    background-color: blueviolet;
+}
