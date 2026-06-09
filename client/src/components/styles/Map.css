@@ -1,5 +1,6 @@
 .fullMap {
   width: 70%;
+  max-width: 750px;
   height: auto;
   object-fit: contain;
 }

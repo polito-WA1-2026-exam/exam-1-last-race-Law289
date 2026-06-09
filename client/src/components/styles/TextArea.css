@@ -1,0 +1,8 @@
+.textBox {
+    background-color: gainsboro;
+    color: black;
+    width: 35%;
+    height: 100%;
+    border: 3px solid blue;
+    border-radius: 8px;
+}
