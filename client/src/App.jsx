@@ -1,16 +1,10 @@
+
 import { useState, useEffect } from 'react'
 
-import PlayButton from './components/PlayButton'
-import RankingButton from './components/RankingButton'
-import LastGamesButton from './components/LastGamesButton'
-import Map from './components/Map'
-import TextArea from './components/TextArea'
-import ButtonComposition from './components/ButtonComposition'
+import SetupUI from './components/SetupUI'
 import ConnectionsPanel from './components/Connections'
 
 import './App.css'
-
-const instructionText = "esempio di istruzioni, placeholder"
 
 function App() {
   
@@ -29,7 +23,11 @@ function App() {
         return r.json()
       })
       .then(data => {
-        const items = data.map((c, i) => `${c.stationA.name} - ${c.stationB.name}`)
+        const items = data.map(c => ({
+          top: c.stationA.name,
+          bottom: c.stationB.name,
+          lineColor: c.line?.color || '#000',
+        }))
         setConnections(items)
       })
       .catch(err => setConnError(err.message))
@@ -44,18 +42,9 @@ function App() {
     </header>
     
     <main>
-      <Map/>
-      {!playing && (
-        <div className='setup-phase-ui'>
-          <TextArea text={instructionText}/>
-          <ButtonComposition>
-            <LastGamesButton/>
-            <RankingButton/>
-            <PlayButton setPlaying={setPlaying} />
-          </ButtonComposition>
-        </div>
-      )}
-
+      { !playing && 
+        <SetupUI setPlaying={setPlaying}/> }
+        
       <ConnectionsPanel 
         showConnection={playing} 
         connError={connError} 

@@ -36,13 +36,6 @@ button:hover {
   background-color: blueviolet;
 }
 
-.setup-phase-ui {
-  display: flex;
-  flex: 1;
-  align-items: flex-start;
-  gap: 5vw;
-}
-
 footer {
   background-color: navy;
 }

@@ -6,6 +6,32 @@
 }
 
 .connection-item {
-	padding: 0.5rem;
+	padding: 0.75rem;
+	border: 1px solid #ccc;
+	border-radius: 0.5rem;
+	background: #fff;
+	color: #111;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	cursor: pointer;
+}
+
+.connection-item:hover {
+	background: #f2f2f2;
+	color: #111;
+}
+
+.connection-item-top,
+.connection-item-bottom {
+	display: block;
+	font-weight: 600;
+}
+
+.connection-item-separator {
+	display: block;
+	margin: 0.25rem 0;
 }
 
