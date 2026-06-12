@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 
 import SetupUI from './components/SetupUI'
-import ConnectionsPanel from './components/Connections'
+import PlanningUI from './components/PlanningUI'
 
 import './App.css'
 
@@ -12,21 +12,23 @@ function App() {
   const [connections, setConnections] = useState([])
   const [loadingConnections, setLoadingConnections] = useState(false)
   const [connError, setConnError] = useState(null)
+  const [targetPair, setTargetPair] = useState([])
 
   useEffect(() => {
     if (!playing) return;
     setLoadingConnections(true)
     setConnError(null)
-    fetch('http://localhost:3001/connections')
-      .then(r => {
-        if (!r.ok) throw new Error('Network response was not ok')
-        return r.json()
+    fetch('http://localhost:3001/game/planning')
+      .then(res => {
+        if (!res.ok) throw new Error('Network response was not ok')
+        return res.json()
       })
       .then(data => {
-        const items = data.map(c => ({
-          top: c.stationA.name,
-          bottom: c.stationB.name,
-          lineColor: c.line?.color || '#000',
+        setTargetPair(data.randomPair)
+        const items = data.connections.map(connection => ({
+          top: connection.stationA.name,
+          bottom: connection.stationB.name,
+          lineColor: connection.line?.color || '#000',
         }))
         setConnections(items)
       })
@@ -45,12 +47,15 @@ function App() {
       { !playing && 
         <SetupUI setPlaying={setPlaying}/> }
         
-      <ConnectionsPanel 
-        showConnection={playing} 
-        connError={connError} 
-        loadingConnections={loadingConnections} 
-        connections={connections}
-      />
+      { playing && (
+        <PlanningUI 
+          showConnection={playing} 
+          connError={connError} 
+          loadingConnections={loadingConnections} 
+          connections={connections}
+          targetPair={targetPair}
+        />
+      )}
     </main>
 
     <footer>

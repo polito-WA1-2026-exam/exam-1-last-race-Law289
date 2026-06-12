@@ -32,10 +32,14 @@ app.get('/game/setup', async (req, res) => {
   }
 })
 
-app.get('/connections', async (req, res) => {
+app.get('/game/planning', async (req, res) => {
   try {
+    const randomPair = await gameTargetPair();
     const connections = await db.getAllConnections();
-    res.json(connections);
+    res.json({
+      "randomPair": randomPair,
+      "connections": connections
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -44,7 +48,7 @@ app.get('/connections', async (req, res) => {
 //#endregion
 
 const port = 3001;
-// activate the server
+
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
 });

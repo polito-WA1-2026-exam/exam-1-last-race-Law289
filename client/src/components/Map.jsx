@@ -1,12 +1,18 @@
 
 import './styles/Map.css'
 
-function Map() {
+function Map({playing}) {
     return (
         <>
-          <img className="fullMap"
+          { !playing && <img className="gameMap"
             src="/imgs/NetworkMapFull.png" 
             alt="network map not found"/>
+          }
+
+          { playing && <img className="gameMap"
+            src="/imgs/NetworkMapStationsOnly.png"
+            alt="stations map not found"/>
+          }
         </>
     )
 }

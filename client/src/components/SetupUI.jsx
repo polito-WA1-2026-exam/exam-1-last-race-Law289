@@ -13,7 +13,7 @@ const instructionText = "esempio di istruzioni, placeholder"
 function SetupUI({setPlaying}) {
     return (
       <>
-        <Map/>
+        <Map playing={false}/>
         <div className='setup-phase-ui'>
           <TextArea text={instructionText}/>
           <ButtonComposition>
