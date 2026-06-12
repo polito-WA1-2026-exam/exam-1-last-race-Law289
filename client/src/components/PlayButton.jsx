@@ -1,14 +1,16 @@
 
 import './styles/PlayButton.css'
 
-function playButton({handleStartPlay}) {
-    return (
-        <>
-          <button className="PlayButton" onClick={handleStartPlay}>
-            Play!
-          </button>
-        </>
-    )
+function PlayButton({ setPlaying }) {
+  const handleClick = () => {
+    setPlaying(prev => !prev)
+  }
+
+  return (
+    <button className="PlayButton" onClick={handleClick}>
+      Play!
+    </button>
+  )
 }
 
-export default playButton
+export default PlayButton

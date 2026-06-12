@@ -1,10 +1,15 @@
 import express from 'express';
 import morgan from 'morgan';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { param, body, validationResult } from 'express-validator';
 import cors from 'cors'
 
-import { gameTargetPair } from './game';
+import { gameTargetPair } from './game.js';
+import * as db from './db-interface.js'
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const log = morgan('dev');
@@ -17,13 +22,22 @@ app.use(cors({origin: "http://localhost:5173"}));
 
 //#region API
 
-app.get('/game/setup', (req, res) => {
+app.get('/game/setup', async (req, res) => {
   try {
-    const randomPair = await pairToConnect();
+    const randomPair = await gameTargetPair();
     res.json(randomPair);
   }
   catch (err) {
     res.status(500).json({error: err.message});
+  }
+})
+
+app.get('/connections', async (req, res) => {
+  try {
+    const connections = await db.getAllConnections();
+    res.json(connections);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 })
 
